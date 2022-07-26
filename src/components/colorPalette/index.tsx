@@ -100,6 +100,7 @@ class ColorPalette extends PureComponent<Props, State> {
 
   carousel: React.RefObject<typeof Carousel> = React.createRef();
   scrollBar: React.RefObject<any> = React.createRef();
+  addRefByIndex: any = React.createRef();
   itemsRefs?: React.RefObject<typeof ColorSwatch>[] = undefined;
   selectedColorIndex?: number = undefined;
   selectedPage?: number = undefined;
@@ -292,14 +293,14 @@ class ColorPalette extends PureComponent<Props, State> {
     }
   };
 
-  addRefByIndex = (index: number, ref?: any) => {
-    if (this.itemsRefs && ref) {
-      this.itemsRefs[index] = ref;
-    }
-  }
-
   renderColorSwatch(color: string, index: number) {
     const {animatedIndex, testID} = this.props;
+
+    this.addRefByIndex.current = (ref?: any) => {
+      if (this.itemsRefs && ref) {
+        this.itemsRefs[index] = ref;
+      }
+    };
 
     return (
       <ColorSwatch
@@ -311,7 +312,7 @@ class ColorPalette extends PureComponent<Props, State> {
         selected={this.value === color}
         animated={index === animatedIndex}
         onPress={this.onValueChange}
-        ref={r => this.addRefByIndex(index, r)}
+        ref={this.addRefByIndex}
         testID={`${testID}-${color}`}
       />
     );
